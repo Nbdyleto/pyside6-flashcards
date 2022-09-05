@@ -18,9 +18,8 @@ class Window(QWidget):
 
         global db
         db = FlashcardsDB()
-
         db.create_table()
-
+        
         self.loadTopicsInTable()
 
         widgets.btnAddCards.clicked.connect(self.openAddCardsWindow)
@@ -37,8 +36,6 @@ class Window(QWidget):
 
         global cardsWinWidgets
         cardsWinWidgets = self.ui_addCards
-
-        cardsWinWidgets.listTopics
 
         self.addCardsWindow.show()
         cardsWinWidgets.btnAddCard.clicked.connect(self.addCards)
@@ -108,113 +105,6 @@ class Window(QWidget):
         self.loadTopicsInTable()
 
     #######################
-
-    def deleteAll(self):
-        db.cursor.execute('DELETE * FROM flashcards')
-        self.gotoStart()
-
-    def deleteCurrent_BM(self):
-        info = self.front + "|" + self.translation
-        db.cursor.execute('DELETE FROM flashcards where info=?', (info,))
-        db.conn.commit()
-        self.gotoStart()
-
-    def showTranslation(self):
-        text = widgets.TextLabel.text()
-        if len(self.WORDS) == 0:
-            pass
-        else:
-            if text == self.front:
-                widgets.TextLabel.setText(self.translation)
-                widgets.TextLabel.setStyleSheet("color: rgb(0, 0, 0);\n"
-        "background-color: rgba(0, 106, 255, 168);\n"
-        "border: 3px solid rgb(0, 42, 102);\n"
-        "border-radius: 20px;\n"
-        "")
-            elif text == self.translation:
-                widgets.TextLabel.setText(self.front)
-                widgets.TextLabel.setStyleSheet("color: rgb(0, 0, 0);\n"
-        "background-color: rgba(184, 0, 180, 168);\n"
-        "border: 3px solid rgb(184,  0,  180);\n"
-        "border-radius: 20px;\n"
-        "")
-
-    def preWord(self):
-        try:
-            index = int(self.WORDS.index(f'{self.front}|{self.translation}'))-1
-            if index == -1:
-                raise IndexError
-            card = self.WORDS[index]
-            card = card.split("|")
-            self.front = card[0]
-            self.translation = card[1]
-            widgets.TextLabel.setText(self.front)
-            widgets.TextLabel.setStyleSheet("color: rgb(0, 0, 0);\n"
-    "background-color: rgba(184, 0, 180, 168);\n"
-    "border: 3px solid rgb(184,  0,  180);\n"
-    "border-radius: 20px;\n"
-    "")
-        except:
-            pass
-
-    def nextWord(self):
-        try:
-            card = self.WORDS[0]
-            print(card)
-            self.front = card[0]
-            self.translation = card[1]
-            widgets.TextLabel.setText(self.front)
-            widgets.TextLabel.setStyleSheet("color: rgb(0, 0, 0);\n"
-    "background-color: rgba(184, 0, 180, 168);\n"
-    "border: 3px solid rgb(184,  0,  180);\n"
-    "border-radius: 20px;\n"
-    "")
-        except:
-            pass
-
-    def gotoStart(self):
-        results = db.cursor.execute("SELECT * from flashcards").fetchall()
-        self.WORDS = []
-        for rows in results:
-            temp = []
-            for row in rows:
-                temp.append(row)
-            self.WORDS.append(temp)
-
-        print(self.WORDS)
-        try:
-                self.front = str(self.WORDS[0][0])
-                self.translation = str(self.WORDS[0][1])
-                widgets.TextLabel.setText(self.front)
-                widgets.TextLabel.setStyleSheet("color: rgb(0, 0, 0);\n"
-        "background-color: rgba(184, 0, 180, 168);\n"
-        "border: 3px solid rgb(184,  0,  180);\n"
-        "border-radius: 20px;\n"
-        "")
-        except IndexError:
-            widgets.TextLabel.setText(self.front)
-            widgets.TextLabel.setStyleSheet("color: rgb(0, 0, 0);\n"
-        "background-color: rgba(184, 0, 180, 168);\n"
-        "border: 3px solid rgb(184,  0,  180);\n"
-        "border-radius: 20px;\n"
-        "")
-            self.front = ""
-            self.translation = ""
-
-    def exit_M(self):
-        from sys import exit
-        exit()
-
-    def add_new_MB(self):
-        print('clicked!')
-        textF, okF = QInputDialog.getText(self, "New Card", "Enter The Front Side Of The Card:")
-        if okF:
-            textT, okT = QInputDialog.getText(self, "New Card", "Enter The Translation:")
-            if okT:
-                qry = f"INSERT INTO flashcards(card_question, card_answer, topic_id) VALUES (?,?,?)"
-                row = (textF, textT, 2)
-                db.populate(qry, row)
-                self.gotoStart()
 
 if __name__ == "__main__":
     import sys
