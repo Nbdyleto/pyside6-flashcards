@@ -1,3 +1,4 @@
+from cgi import test
 from PySide6 import QtCore, QtGui, QtWidgets
 from PySide6.QtWidgets import QWidget, QInputDialog
 from flashcards_db_operations import FlashcardsDB
@@ -21,13 +22,12 @@ class Window(QWidget):
         db.create_table()
         
         self.loadTopicsInTable()
-
+        self.loadWidgetCell()
         widgets.btnAddCards.clicked.connect(self.openAddCardsWindow)
 
     # ADD CARDS WINDOW FUNCTION
 
     def openAddCardsWindow(self):
-        print('aff')
         self.addCardsWindow = None
 
         self.addCardsWindow = QtWidgets.QMainWindow()
@@ -60,8 +60,8 @@ class Window(QWidget):
         qry_insert = "INSERT INTO flashcards VALUES (?,?,?)"
         row = (card_question, card_answer, topic_id)
         db.populate(qry_insert, row)
-        print(topic_id, card_question, card_answer)
         self.addCardsClearContents()
+        self.loadWidgetCell()
 
     def addCardsClearContents(self):
         cardsWinWidgets.pTextFront.clear()
@@ -82,9 +82,8 @@ class Window(QWidget):
             widgets.tblWidgetTopics.setRowHeight(tablerow, 60)
             widgets.tblWidgetTopics.setItem(tablerow, 0, QtWidgets.QTableWidgetItem(f'{str(topic[2])}%'))
             widgets.tblWidgetTopics.setItem(tablerow, 1, QtWidgets.QTableWidgetItem(topic[1]))
-            btnCell = QtWidgets.QPushButton(widgets.tblWidgetTopics)
-            btnCell.setText('Start Study')
-            widgets.tblWidgetTopics.setCellWidget(tablerow, 2, btnCell)
+
+            #self.loadWidgetCell(tablerow)
             tablerow+=1
         
         lastrow = self.row_count-1
@@ -95,6 +94,22 @@ class Window(QWidget):
         widgets.tblWidgetTopics.setCellWidget(lastrow, 0, btnCell)
         widgets.tblWidgetTopics.cellWidget(lastrow, 0).clicked.connect(self.addDeck)
     
+    def loadWidgetCell(tablerow):
+        #btnCell = QtWidgets.QPushButton(widgets.tblWidgetTopics)
+        testqry = db.cursor.execute("SELECT * FROM flashcards")
+        rows = [row for row in testqry]
+        print(rows) 
+
+        resultsqry = db.cursor.execute("PRAGMA topics(flashcards)")
+        resultsinfo = resultsqry.fetchall()
+        rows = [row for row in resultsinfo]
+        print(f'PRAGMA RESULTS: {rows}')
+
+        print("="*50)
+        #btnCell.setText("x")
+        #widgets.tblWidgetTopics.setCellWidget(tablerow, 2, btnCell)
+
+
     @QtCore.Slot()
     def addDeck(self):
         new_topic, input_status = QInputDialog.getText(self, "New Topic", "Enter The Name of Topic:")
