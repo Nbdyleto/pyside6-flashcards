@@ -14,7 +14,7 @@ class FlashcardsDB:
     #"""
     #Uselless? 
     # Context Manager Capabilities
-
+    
     def __enter__(self):
         return self
     
