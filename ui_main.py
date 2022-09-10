@@ -16,25 +16,69 @@ class Ui_MainWindow(object):
     
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(724, 408)
+        MainWindow.setStyleSheet(
+            """
+/*MainWindow*/
+    #MainWindow {
+        background-color: #282a36
+    }
+/*QPushButton*/
+    QPushButton {
+        background-color:#6272a4;
+        color: #000000
+    }
+
+    QLabel {
+        color: white
+    }
+
+/*QTableWidget*/
+    QTableWidget {
+        background-color: #282a36; 
+        border-radius: 0px;
+        font-size: 20px
+    }
+    QTableWidget::item {
+        color: #f8f8f2;                    
+        background-color: #44475a;
+        margin-top: 2px;          
+        border-radius: 0px;
+        padding-left: 2px;
+    }
+    QHeaderView::section {
+        background-color:#6272a4;
+        selection-color: #000000;
+    }
+    QTableWidget::item:hover {
+        background-color: #6272a4;
+        color : black;
+    }
+    QTableWidget .QPushButton {
+        background-color: #282a36;
+        color: white
+    }
+        """)
         
         self.tblWidgetTopics = QtWidgets.QTableWidget(MainWindow)
-        self.tblWidgetTopics.setGeometry(QtCore.QRect(160, 130, 400, 200))
+        self.tblWidgetTopics.setGeometry(QtCore.QRect(60, 130, 640, 240))
         self.tblWidgetTopics.setObjectName("tblWidgetTopics")
         self.tblWidgetTopics.setColumnCount(3)
         self.tblWidgetTopics.setRowCount(1)
         self.tblWidgetTopics.setShowGrid(False)
+        self.tblWidgetTopics.setFocusPolicy(QtCore.Qt.NoFocus)
+        self.tblWidgetTopics.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         self.tblWidgetTopics.horizontalHeader().setVisible(False)
         self.tblWidgetTopics.verticalHeader().setVisible(False)
-        #self.tblWidgetTopics.setColumnWidth(0,80)
-        #self.tblWidgetTopics.setColumnWidth(1,550)
-        #self.tblWidgetTopics.setColumnWidth(2,140)
         item = QtWidgets.QTableWidgetItem()
         self.tblWidgetTopics.setHorizontalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
         self.tblWidgetTopics.setHorizontalHeaderItem(1, item)
         item = QtWidgets.QTableWidgetItem()
         self.tblWidgetTopics.setHorizontalHeaderItem(2, item)
-        
+        self.tblWidgetTopics.setColumnWidth(0,80)
+        self.tblWidgetTopics.setColumnWidth(1,400)
+        self.tblWidgetTopics.setColumnWidth(2,140)
+
         self.lblDecks = QtWidgets.QLabel(MainWindow)
         self.lblDecks.setGeometry(QtCore.QRect(320, 100, 67, 18))
         self.lblDecks.setObjectName("lblDecks")
@@ -59,6 +103,7 @@ class Ui_MainWindow(object):
         self.line.setFrameShape(QtWidgets.QFrame.HLine)
         self.line.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line.setObjectName("line")
+        self.line.setStyleSheet("border-color: black")
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)

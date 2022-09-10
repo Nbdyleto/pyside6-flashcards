@@ -14,7 +14,7 @@ class FlashcardsDB:
     #"""
     #Uselless? 
     # Context Manager Capabilities
-    
+
     def __enter__(self):
         return self
     
@@ -62,7 +62,6 @@ class FlashcardsDB:
     def populate(self, qry, row):
         self.cursor.execute(qry, row)
         self.conn.commit()
-
     
         #self.topics = self.cursor.execute("SELECT * FROM topics").fetchall()
     

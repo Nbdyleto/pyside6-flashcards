@@ -1,12 +1,11 @@
-from cgi import test
 from PySide6 import QtCore, QtGui, QtWidgets
 from PySide6.QtWidgets import QWidget, QInputDialog
 from flashcards_db_operations import FlashcardsDB
 from ui_main import Ui_MainWindow
 from ui_addCards import Ui_AddCardsWindow
+from ui_studyCards import Ui_StudyCardsWindow
 
 class Window(QWidget):
-
     def __init__(self):
         super(Window, self).__init__()
         self.ui = Ui_MainWindow()
@@ -26,15 +25,14 @@ class Window(QWidget):
     # ADD CARDS WINDOW FUNCTION
 
     def openAddCardsWindow(self):
-        self.addCardsWindow = None
-
         self.addCardsWindow = QtWidgets.QMainWindow()
         self.ui_addCards = Ui_AddCardsWindow()
         self.ui_addCards.setupUi(self.addCardsWindow)
 
         global cardsWinWidgets
         cardsWinWidgets = self.ui_addCards
-
+        
+        cardsWinWidgets.listTopics.setCurrentRow(0)
         self.addCardsWindow.show()
         cardsWinWidgets.btnAddCard.clicked.connect(self.addCards)
 
@@ -50,18 +48,23 @@ class Window(QWidget):
 
     @QtCore.Slot()
     def addCards(self):
-        #topic = cardsWinWidgets.listWidget.SelectedClicked()
-        topic_id = cardsWinWidgets.listTopics.currentRow()
         card_question = cardsWinWidgets.pTextFront.toPlainText()
         card_answer = cardsWinWidgets.pTextVerse.toPlainText()
-        qry_insert = "INSERT INTO flashcards VALUES (?,?,?)"
-        row = (card_question, card_answer, topic_id)
-        print(topic_id)
-        with FlashcardsDB() as db:
-            print('populating...')
-            db.populate(qry_insert, row)
-        self.addCardsClearContents()
-        self.loadTopicsInTable()
+        if card_question and card_answer != "":
+            topic_id = cardsWinWidgets.listTopics.currentRow()
+            card_question = cardsWinWidgets.pTextFront.toPlainText()
+            card_answer = cardsWinWidgets.pTextVerse.toPlainText()
+            qry_insert = "INSERT INTO flashcards VALUES (?,?,?)"
+            row = (card_question, card_answer, topic_id)
+            with FlashcardsDB() as db:
+                print('populating...')
+                db.populate(qry_insert, row)
+            self.addCardsClearContents()
+            self.loadTopicsInTable()
+        else:
+            retry_msg = QtWidgets.QMessageBox(self.addCardsWindow)
+            retry_msg.setText('Input something in your card (front and verse)!')
+            retry_msg.show()
 
     def addCardsClearContents(self):
         cardsWinWidgets.pTextFront.clear()
@@ -94,25 +97,49 @@ class Window(QWidget):
         widgets.tblWidgetTopics.setCellWidget(lastrow, 0, btnCell)
         widgets.tblWidgetTopics.cellWidget(lastrow, 0).clicked.connect(self.addDeck)
     
-    def loadWidgetCell(self, tablerow):
-        btnCell = QtWidgets.QPushButton(widgets.tblWidgetTopics)
+    def hasRecordsInDB(self, tablerow): 
         with FlashcardsDB() as db:
-            try:
+            qry = f"SELECT COUNT(*) FROM flashcards WHERE (topic_id = {tablerow})"
+            recordCount = db.cursor.execute(qry).fetchall()[0][0]
+            if recordCount > 0:
+                return True
+            return False
+
+    def loadWidgetCell(self, tablerow):
+        self.hasRecordsInDB(tablerow)
+        with FlashcardsDB() as db:
+            hasRecordsInDB = self.hasRecordsInDB(tablerow)
+            if hasRecordsInDB:
+                btnStartStudy = QtWidgets.QPushButton(widgets.tblWidgetTopics)
                 results = db.cursor.execute(f"SELECT * FROM flashcards WHERE (topic_id = {tablerow})")
                 rows = [row for row in results]
-                print(rows[0])
-                btnCell.setText('Start')
-            except Exception:
+                print(rows)
+                btnStartStudy.setText('Start Study')
+                btnStartStudy.clicked.connect(self.openStudyCardsWindow)
+                widgets.tblWidgetTopics.setCellWidget(tablerow, 2, btnStartStudy)
+            else:
+                btnAddCards = QtWidgets.QPushButton(widgets.tblWidgetTopics)
                 print('NOT EXISTS')
-                btnCell.setText('Add Cards')
-                btnCell.clicked.connect(self.openAddCardsWindow)
-        widgets.tblWidgetTopics.setCellWidget(tablerow, 2, btnCell)
+                btnAddCards.setText('Add Cards')
+                btnAddCards.clicked.connect(self.openAddCardsWindow)
+                widgets.tblWidgetTopics.setCellWidget(tablerow, 2, btnAddCards)
+                
+
+    def openStudyCardsWindow(self):
+        self.studyCardsWindow = QtWidgets.QMainWindow()
+        self.ui_studyCards = Ui_StudyCardsWindow()
+        self.ui_studyCards.setupUi(self.studyCardsWindow)
+        
+        global studyCardsWidgets
+        studyCardsWidgets = self.ui_studyCards
+        
+        self.studyCardsWindow.show()
 
     @QtCore.Slot()
     def addDeck(self):
         new_topic, input_status = QInputDialog.getText(self, "New Topic", "Enter The Name of Topic:")
         if input_status:
-            qry_insert = """INSERT INTO topics (topic_id, topic_name, hits_percentage) VALUES (?,?,?);"""
+            qry_insert = "INSERT INTO topics (topic_id, topic_name, hits_percentage) VALUES (?,?,?);"
             row = (self.rowCount, new_topic, 0)
         with FlashcardsDB() as db:
             db.populate(qry_insert, row)
