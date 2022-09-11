@@ -53,11 +53,10 @@ class FlashcardsDB:
         print('table topics is ready!')
 
         poptbl = """INSERT INTO topics (topic_id, topic_name, hits_percentage) VALUES (?,?,?);"""
-        self.populate(poptbl, (0, "", 0))
-        self.populate(poptbl, (1, "Math", 0))
-        self.populate(poptbl, (2, "Geography", 0))
-        self.populate(poptbl, (3, "Chemistry", 0))
-        self.populate(poptbl, (4, "Physics", 0))
+        self.populate(poptbl, (0, "Math", 0))
+        self.populate(poptbl, (1, "Geography", 0))
+        self.populate(poptbl, (2, "Chemistry", 0))
+        self.populate(poptbl, (3, "Physics", 0))
     
     def populate(self, qry, row):
         self.cursor.execute(qry, row)
