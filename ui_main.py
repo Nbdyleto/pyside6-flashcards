@@ -16,47 +16,47 @@ class Ui_MainWindow(object):
     
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(724, 408)
-        MainWindow.setStyleSheet(
-            """
-/*MainWindow*/
-    #MainWindow {
-        background-color: #282a36
-    }
-/*QPushButton*/
-    QPushButton {
-        background-color:#6272a4;
-        color: #000000
-    }
+        MainWindow.setStyleSheet("""
+        /*MainWindow*/
+            #MainWindow {
+                background-color: #282a36
+            }
+        /*QPushButton*/
+            QPushButton {
+                background-color:#6272a4;
+                color: #000000
+            }
 
-    QLabel {
-        color: white
-    }
+            QLabel {
+                color: white
+            }
 
-/*QTableWidget*/
-    QTableWidget {
-        background-color: #282a36; 
-        border-radius: 0px;
-        font-size: 20px
-    }
-    QTableWidget::item {
-        color: #f8f8f2;                    
-        background-color: #44475a;
-        margin-top: 2px;          
-        border-radius: 0px;
-        padding-left: 2px;
-    }
-    QHeaderView::section {
-        background-color:#6272a4;
-        selection-color: #000000;
-    }
-    QTableWidget::item:hover {
-        background-color: #6272a4;
-        color : black;
-    }
-    QTableWidget .QPushButton {
-        background-color: #282a36;
-        color: white
-    }
+        /*QTableWidget*/
+            QTableWidget {
+                background-color: #282a36; 
+                border-radius: 0px;
+                font-size: 20px;
+                selection-background-color: #282a36
+            }
+            QTableWidget::item {
+                color: #f8f8f2;                    
+                background-color: #44475a;
+                margin-top: 5px;          
+                border-radius: 0px;
+                padding-left: 2px;
+            }
+            QHeaderView::section {
+                background-color:#6272a4;
+                selection-color: #000000;
+            }
+            QTableWidget::item:hover {
+                background-color: #6272a4;
+                color : black;
+            }
+            QTableWidget .QPushButton {
+                background-color: #282a36;
+                color: white
+            }
         """)
         
         self.tblWidgetTopics = QtWidgets.QTableWidget(MainWindow)

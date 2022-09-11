@@ -20,18 +20,23 @@ class Ui_StudyCardsWindow(object):
         self.plainTextEdit = QtWidgets.QPlainTextEdit(self.centralwidget)
         self.plainTextEdit.setGeometry(QtCore.QRect(30, 92, 251, 221))
         self.plainTextEdit.setObjectName("plainTextEdit")
+
         self.btnRevealAnswer = QtWidgets.QPushButton(self.centralwidget)
         self.btnRevealAnswer.setGeometry(QtCore.QRect(30, 317, 251, 31))
         self.btnRevealAnswer.setObjectName("btnRevealAnswer")
+
         self.btnUnsatisfactory = QtWidgets.QPushButton(self.centralwidget)
         self.btnUnsatisfactory.setGeometry(QtCore.QRect(100, 317, 31, 31))
         self.btnUnsatisfactory.setObjectName("btnUnsatisfactory")
+
         self.btnNormal = QtWidgets.QPushButton(self.centralwidget)
         self.btnNormal.setGeometry(QtCore.QRect(140, 317, 31, 31))
         self.btnNormal.setObjectName("btnNormal")
+
         self.btnVeryGood = QtWidgets.QPushButton(self.centralwidget)
         self.btnVeryGood.setGeometry(QtCore.QRect(180, 317, 31, 31))
         self.btnVeryGood.setObjectName("btnVeryGood")
+        
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(30, 57, 41, 18))
         self.label.setObjectName("label")

@@ -86,9 +86,9 @@ class Window(QWidget):
     def addDeck(self):
         new_topic, input_status = QInputDialog.getText(self, "New Topic", "Enter The Name of Topic:")
         if input_status:
-            qry_insert = "INSERT INTO topics (topic_id, topic_name, hits_percentage) VALUES (?,?,?);"
             row = (self.rowCount, new_topic, 0)
         with FlashcardsDB() as db:
+            qry_insert = "INSERT INTO topics (topic_id, topic_name, hits_percentage) VALUES (?,?,?);"
             db.populate(qry_insert, row)
             self.loadTopicsInTable()
 
@@ -159,7 +159,7 @@ class Window(QWidget):
     def loadWindowInfo(self, rowClicked):
         studyCardsWidgets.lblDeckName.setText(self.getTopicName(rowClicked))
         cardsRecords, cardsCount = self.getFlashcardsInfo(rowClicked)
-        studyCardsWidgets.lblCardsQnt.setText(f"1/{str(cards_count)}")
+        studyCardsWidgets.lblCardsQnt.setText(f"1/{str(cardsCount)}")
 
     def getTopicName(self, topic_id):
         with FlashcardsDB() as db:

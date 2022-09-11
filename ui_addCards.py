@@ -15,6 +15,32 @@ class Ui_AddCardsWindow(object):
     def setupUi(self, AddCardsWindow):
         AddCardsWindow.setObjectName("AddCardsWindow")
         AddCardsWindow.resize(405, 305)
+        AddCardsWindow.setStyleSheet("""
+    /*Window*/
+        #AddCardsWindow {
+            background-color: #282a36
+        }
+    /*QPushButton*/
+        QPushButton {
+            background-color: #6272a4;
+            color: #282a36
+        }
+        QLabel {
+            color: #f8f8f2
+        }
+        QPlainTextEdit {
+            background-color: #44475a;
+            selection-color: #6272a4;
+            selection-background-color: #282a36
+        }
+        QListWidget {
+            background-color: #44475a;
+            color: #f8f8f2;
+            selection-color: #282a36;
+            selection-background-color: #ff79c6
+        }
+        """)
+        
 
         self.centralwidget = QtWidgets.QWidget(AddCardsWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -78,4 +104,4 @@ if __name__ == "__main__":
     ui = Ui_AddCardsWindow()
     ui.setupUi(AddCardsWindow)
     AddCardsWindow.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
