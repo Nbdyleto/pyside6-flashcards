@@ -86,7 +86,7 @@ class Window(QWidget):
     def addDeck(self):
         new_topic, input_status = QInputDialog.getText(self, "New Topic", "Enter The Name of Topic:")
         if input_status:
-            row = (self.rowCount, new_topic, 0)
+            row = (self.rowCount-1, new_topic, 0)
         with FlashcardsDB() as db:
             qry_insert = "INSERT INTO topics (topic_id, topic_name, hits_percentage) VALUES (?,?,?);"
             db.populate(qry_insert, row)
